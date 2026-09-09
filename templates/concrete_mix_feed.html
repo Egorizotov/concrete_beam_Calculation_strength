@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set active = "feed" %}
+{% block title %}{{ concrete_mix.concrete_mix_name }} — ЮГ БЕТОН{% endblock %}
+{% block body_class %}feed-page{% endblock %}
+
+{% block content %}
+<section class="screen feed-screen">
+    <div class="feed-media">
+        <video autoplay muted loop playsinline poster="{{ concrete_mix.concrete_mix_image_url }}">
+            <source src="{{ concrete_mix.concrete_mix_video_url }}" type="video/mp4">
+        </video>
+
+        <div class="feed-shade"></div>////////////////
+
+
+        <div class="feed-like">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <b>{{ concrete_mix.concrete_mix_likes_count }}</b>
+        </div>
+
+        <div class="feed-info">
+            <div class="feed-name">{{ concrete_mix.concrete_mix_name }}</div>
+            <div class="feed-fields">
+                <span>{{ concrete_mix.concrete_mix_price }} ₽/м³</span>
+                <span>{{ concrete_mix.concrete_mix_strength }} МПа</span>
+            </div>
+        <div class="feed-description-block">
+            <input type="checkbox" id="read-more-toggle" class="read-more-toggle">
+            <p class="feed-description">
+                {{ concrete_mix.concrete_mix_description }}
+            </p>
+            <label for="read-more-toggle" class="read-more-label">ещё</label>
+        </div>
+        </div>
+
+        <a class="next-button"
+            href="/concrete-mixes/{{ concrete_mix.concrete_mix_id }}?next=true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 -6L19 12L8 30" stroke="white" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter "/>
+            </svg>
+        </a>
+    </div>
+
+    {% include "partials/bottom_nav.html" %}
+</section>
+{% endblock %}
+
