@@ -1,1 +1,1 @@
-# concrete_beam_Calculation_strength
+# Репозиторий backend по курсу "Разработка интернет-приложений"
