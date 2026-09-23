@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% set active = "add" %}
+{% block title %}Добавление — ЮГ БЕТОН{% endblock %}
+{% block body_class %}draft-page{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <header class="topbar">
+        {% include "partials/logo.html" %}
+    </header>
+    <div class="divider"></div>
+
+    {% if not beam_mark %}
+    <form class="draft-form" method="post" action="/beam-marks/draft" autocomplete="off" enctype="multipart/form-data">
+        <div class="field-group">
+            <label>ФОТО</label>
+            <div class="media-preview">
+                <img src="http://localhost:9000/beam-marks-media/placeholder.png" alt="Фото">
+            </div>
+            <input type="file" name="beam_mark_image" accept="image/*" class="media-input">
+        </div>
+
+        <div class="field-group">
+            <label>ВИДЕО</label>
+            <div class="media-preview">
+                <video autoplay muted loop playsinline
+                       src="http://localhost:9000/beam-marks-media/mplaceholder.mp4"></video>
+            </div>
+            <input type="file" name="beam_mark_video" accept="video/*" class="media-input">
+        </div>
+
+        <div class="field-group">
+            <label>МАРКА</label>
+            <input name="beam_mark_name" type="text" placeholder="Марка балки" required>
+        </div>
+
+        <button class="save-button" type="submit">ДАЛЕЕ</button>
+    </form>
+    {% else %}
+    <form class="draft-form" method="post" action="/beam-marks/draft/publish" autocomplete="off">
+        <div class="field-group">
+            <label>ФОТО</label>
+            <div class="media-preview">
+                <img src="{{ beam_mark.beam_mark_image_url or 'http://localhost:9000/beam-marks-media/placeholder.png' }}" alt="Фото">
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>ВИДЕО</label>
+            <div class="media-preview">
+                <video autoplay muted loop playsinline
+                       src="{{ beam_mark.beam_mark_video_url or 'http://localhost:9000/beam-marks-media/mplaceholder.mp4' }}"></video>
+            </div>
+        </div>
+
+        <div class="field-group">
+            <label>МАРКА</label>
+            <input type="text" value="{{ beam_mark.beam_mark_name }}" readonly>
+        </div>
+
+        <div class="field-group">
+            <label>ОПИСАНИЕ</label>
+            <textarea name="beam_mark_description" rows="4" placeholder="Описание" required>{{ beam_mark.beam_mark_description }}</textarea>
+        </div>
+
+        <div class="field-group">
+            <label>ЦЕНА</label>
+            <input name="beam_mark_price" type="number" min="0" placeholder="Цена за м³" value="{{ beam_mark.beam_mark_price or '' }}" required>
+        </div>
+
+        <div class="field-group">
+            <label>ПРОЧНОСТЬ</label>
+            <input name="beam_mark_strength" type="number" min="0" step="0.1" placeholder="МПа" value="{{ beam_mark.beam_mark_strength or '' }}" required>
+        </div>
+
+        <button class="save-button" type="submit">ОПУБЛИКОВАТЬ</button>
+    </form>
+    {% endif %}
+
+    {% include "partials/bottom_nav.html" %}
+</section>
+{% endblock %}

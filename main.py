@@ -4,8 +4,8 @@ from fastapi.staticfiles import StaticFiles
 from api.handlers import router
 
 app = FastAPI(
-    title="ЮГ БЕТОН — каталог бетонных смесей",
-    version="1.0.0",
+    title="ЮГ БЕТОН — каталог марок балок",
+    version="2.0.0",
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")

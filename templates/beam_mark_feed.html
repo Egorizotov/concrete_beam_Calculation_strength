@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set active = "feed" %}
+{% block title %}{{ beam_mark.beam_mark_name }} — ЮГ БЕТОН{% endblock %}
+{% block body_class %}feed-page{% endblock %}
+
+{% block content %}
+<section class="screen feed-screen">
+    <div class="feed-media">
+        <video autoplay muted loop playsinline
+            poster="{{ beam_mark.beam_mark_image_url or '/static/icons/placeholder.png' }}">
+            <source src="{{ beam_mark.beam_mark_video_url or '/static/icons/mplaceholder.mp4' }}" type="video/mp4">
+        </video>
+
+        <div class="feed-shade"></div>
+
+        <div class="feed-like">
+            <div class="feed-like-top">
+                <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                </svg>
+                <b>{{ likes_count }}</b>
+            </div>
+            <div class="feed-like-fields">
+                <span>{{ beam_mark.beam_mark_price }} ₽/м³</span>
+                <span>{{ beam_mark.beam_mark_strength }} МПа</span>
+            </div>
+        </div>
+
+        <div class="feed-info">
+            <div class="feed-name">{{ beam_mark.beam_mark_name }}</div>
+
+            <div class="feed-description-block">
+                <input type="checkbox" id="read-more-toggle" class="read-more-toggle">
+                <p class="feed-description">{{ beam_mark.beam_mark_description }}</p>
+                <label for="read-more-toggle" class="read-more-label"></label>
+            </div>
+        </div>
+
+        <a class="next-button"
+           href="/beam-marks/{{ beam_mark.beam_mark_id }}?next=true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M8 -6L19 12L8 30" stroke="white" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter"/>
+            </svg>
+        </a>
+    </div>
+
+    {% include "partials/bottom_nav.html" %}
+</section>
+{% endblock %}

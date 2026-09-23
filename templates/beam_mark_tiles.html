@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% set active = "tiles" %}
+{% block title %}ЮГ БЕТОН — плитка{% endblock %}
+{% block body_class %}tiles-page{% endblock %}
+
+{% block content %}
+<section class="screen">
+    <header class="topbar">
+        {% include "partials/logo.html" %}
+    </header>
+
+    <form class="filter-form" method="get" action="/beam-marks">
+        <div class="double-slider-block">
+            <div class="slider-values">
+                <span class="slider-value-min">{{ strength_min if strength_min != "" else 0 }}</span>
+                <span class="slider-value-max">{{ strength_max if strength_max != "" else 50 }}</span>
+            </div>
+            <div class="double-slider">
+                <input type="range" name="strength_min" min="0" max="50" step="0.1"
+                       value="{{ strength_min if strength_min != '' else 0 }}">
+                <input type="range" name="strength_max" min="0" max="50" step="0.1"
+                       value="{{ strength_max if strength_max != '' else 50 }}">
+            </div>
+        </div>
+        <button type="submit">ФИЛЬТР</button>
+    </form>
+
+    <div class="divider"></div>
+
+    <section class="tile-grid">
+        {% for beam_mark in beam_marks %}
+        <div class="beam-mark-card-wrap">
+            <a class="beam-mark-card"
+               href="/beam-marks/{{ beam_mark.beam_mark_id }}">
+                <div class="card-image-wrap">
+                    <img src="{{ beam_mark.beam_mark_image_url or '/static/icons/placeholder.png' }}"
+                        alt="{{ beam_mark.beam_mark_name }}">
+                    <div class="like-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                        </svg>
+                        <span>{{ likes_map.get(beam_mark.beam_mark_id, 0) }}</span>
+                    </div>
+                </div>
+                <div class="beam-mark-card-title">{{ beam_mark.beam_mark_name }}</div>
+                <div class="beam-mark-card-meta">{{ beam_mark.beam_mark_strength }} МПа</div>
+            </a>
+            <form action="/beam-marks/{{ beam_mark.beam_mark_id }}/delete" method="post">
+                <button type="submit" class="delete-btn">УДАЛИТЬ</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="empty-state">По заданной прочности марок балок не найдено.</div>
+        {% endfor %}
+    </section>
+
+    {% include "partials/bottom_nav.html" %}
+</section>
+{% endblock %}
