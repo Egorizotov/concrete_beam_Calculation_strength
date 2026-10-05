@@ -10,6 +10,7 @@ class User(Base):
     user_id = Column(Integer, primary_key=True, index=True)
     user_username = Column(String(50), nullable=False, unique=True)
     user_email = Column(String(100), nullable=False, unique=True)
+    user_password = Column(String(100), nullable=False)
 
     likes = relationship("Like", back_populates="user")
     beam_marks = relationship("BeamMark", back_populates="creator")
