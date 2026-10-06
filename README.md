@@ -1,94 +1,48 @@
-# Каталог бетонных смесей — лабораторная работа №1
+# ЮГ БЕТОН — REST API (Лабораторная №3)
 
-FastAPI-приложение по теме «Каталог бетонных смесей».
+## Таблицы БД
 
-## Структура
+### beam_marks
+| Поле | Тип | Описание |
+|---|---|---|
+| beam_mark_id | SERIAL PK | ID |
+| beam_mark_name | VARCHAR(100) | Название |
+| beam_mark_description | VARCHAR(1000) | Описание |
+| beam_mark_status | VARCHAR(20) | черновик/опубликован/удален |
+| beam_mark_image_url | VARCHAR(500) | URL из MinIO |
+| beam_mark_video_url | VARCHAR(500) | URL из MinIO |
+| beam_mark_price | FLOAT | Цена |
+| beam_mark_strength | FLOAT | Прочность |
+| beam_mark_created_at | TIMESTAMP | Дата создания |
+| beam_mark_published_at | TIMESTAMP | Дата публикации |
+| beam_mark_creator_id | INT FK → users | Создатель |
 
-В проекте используется одна Python-коллекция в `data/collections.py`, обработчики FastAPI находятся в `api/handlers.py`, шаблоны Jinja2 — в `templates/`, отдельный CSS — в `static/css/style.css`. База данных не используется.
+### users
+| Поле | Тип | Описание |
+|---|---|---|
+| user_id | SERIAL PK | ID |
+| user_username | VARCHAR(50) UNIQUE | Логин |
+| user_email | VARCHAR(100) UNIQUE | Email |
+| user_password | VARCHAR(100) | Пароль |
 
-Медиафайлы хранятся в MinIO.
+### likes
+| Поле | Тип | Описание |
+|---|---|---|
+| like_id | SERIAL PK | ID |
+| like_user_id | INT FK → users | Кто лайкнул |
+| like_beam_mark_id | INT FK → beam_marks | Что лайкнул |
 
-## Три страницы
+## Методы API
 
-- Плитка: `GET /concrete-mixes`
-- Лента: `GET /concrete-mixes/{concrete_mix_id}`
-- Добавление: `GET /concrete-mixes/draft`
-
-На всех трёх страницах предусмотрена нижняя навигация: «лента», «добавление», «плитка».
-
-## Параметры GET
-
-Фильтрация плитки выполняется на сервере по одному полю — прочности бетонной смеси:
-
-`/concrete-mixes?concrete_mix_strength=22.5`
-
-В ленте предусмотрен переход к следующей бетонной смеси:
-
-`/concrete-mixes/100?next=true`
-
-## Статусы бетонных смесей
-
-В коллекции используются три статуса:
-
-- `черновик`
-- `опубликован`
-- `удален`
-
-На странице «Плитка» и в ленте отображаются только опубликованные бетонные смеси. Черновик доступен на странице добавления. Удалённые бетонные смеси пользователю не показываются.
-
-## Данные бетонной смеси
-
-Для каждой бетонной смеси в коллекции хранятся:
-
-- идентификатор;
-- марка бетонной смеси;
-- цена;
-- прочность;
-- описание;
-- ключ изображения в MinIO;
-- ключ видео в MinIO;
-- статус;
-
-Количество лайков вычисляется на сервере по количеству идентификаторов пользователей в списке лайков.
-
-## MinIO
-
-1. Запустить MinIO:
-
-```bash
-docker compose up -d
-```
-
-2. Открыть консоль MinIO: `http://localhost:9001`.
-3. Создать публичный bucket `concrete-media`.
-4. Загрузить изображения и видео с ключами из `data/collections.py`.
-5. Проверить URL вида `http://localhost:9000/concrete-media/<key>`.
-
-## Запуск
-
-```bash
-python -m venv .venv
-```
-
-Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-```bash
-pip install -r requirements.txt
-python main.py
-```
-
-Основная страница: `http://127.0.0.1:8000/concrete-mixes`.
-
-## Палитра
-
-Основные цвета интерфейса:
-
-- `#FF8C00` — оранжевый;
-- `#180C00` — темно коричневый;
-- `#D87B0A` — темно оранжевый;
-- `#ffffff` — белый;
-- `#080504` — чёрный.
+| Метод | URL | Описание |
+|---|---|---|
+| GET | /api/beam-marks | Список с фильтром (только опубликованные) |
+| GET | /api/beam-marks/feed | Лента с флагом is_liked |
+| GET | /api/beam-marks/draft | Черновик текущего пользователя |
+| POST | /api/beam-marks | Создать + загрузить файлы |
+| PUT | /api/beam-marks/{id}/publish | Опубликовать |
+| DELETE | /api/beam-marks/{id} | Soft delete |
+| POST | /api/beam-marks/{id}/like | Лайк (0/1) |
+| POST | /api/users/register | Регистрация |
+| POST | /api/users/login | Логин |
+| POST | /api/users/logout | Выход |
